@@ -1,0 +1,30 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "payout-harness"
+version = "1.0.0"
+description = "A test harness for asynchronous tip payouts, and the faults it is built to catch"
+requires-python = ">=3.11"
+dependencies = ["fastapi", "httpx", "pydantic", "uvicorn"]
+
+[project.optional-dependencies]
+test = ["pytest", "hypothesis", "jsonschema"]
+
+[tool.setuptools]
+packages = ["service"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q --strict-markers"
+markers = [
+  "unit: pure functions, no service, no storage",
+  "integration: the API against its own storage",
+  "e2e: the whole flow including the worker",
+  "contract: responses against the published OpenAPI schema",
+]
+filterwarnings = [
+  "error",
+  "ignore::starlette.exceptions.StarletteDeprecationWarning",
+]
